@@ -12,7 +12,7 @@ java -version
 
 ## 2. Download a paperclip jar
 
-Use the runnable paperclip-style jar built by `:silkmc-server:createPaperclipJar` or downloaded from the latest GitHub release: <https://github.com/tame-gg/SilkMC/releases>.
+Use the runnable paperclip-style jar built by `:silkmc-server:createPaperclipJar` or downloaded from the latest GitHub release: <https://github.com/tame-gg/Silk/releases>.
 
 ## 3. Start the server
 

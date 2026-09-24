@@ -77,7 +77,7 @@ subprojects {
 
     extensions.configure<PublishingExtension> {
         repositories {
-            maven("https://maven.pkg.github.com/tame-gg/SilkMC") {
+            maven("https://maven.pkg.github.com/tame-gg/Silk") {
                 name = "githubPackages"
                 credentials(PasswordCredentials::class)
             }

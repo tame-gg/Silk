@@ -1,8 +1,18 @@
-# SilkMC
+# Silk
 
-SilkMC is an open-source Minecraft server platform focused on smooth multithreaded performance and practical plugin compatibility.
+Silk is an open-source Minecraft server platform focused on smooth multithreaded performance and practical plugin compatibility.
 
-It preserves Folia's regional multithreading architecture while presenting SilkMC as its own project, with upstream attribution kept to the places where it is legally and technically required.
+It preserves Folia's regional multithreading architecture while presenting Silk as its own project, with upstream attribution kept to the places where it is legally and technically required.
+
+## Download
+
+Get the latest build from [Releases](https://github.com/tame-gg/Silk/releases). Run `silk-paperclip-<version>.jar`:
+
+```bash
+java -Xms4G -Xmx4G -jar silk-paperclip-v0.2.7-alpha.jar nogui
+```
+
+Each release also ships `silk-patches-<version>.zip` with every patch that release is built from.
 
 ## Goals
 
@@ -13,18 +23,19 @@ It preserves Folia's regional multithreading architecture while presenting SilkM
 
 ## Current state
 
+- Minecraft: `26.3` (the 26.2 line is maintained on the [`dev/26.2`](https://github.com/tame-gg/Silk/tree/dev/26.2) branch)
 - Upstream baseline: Paper `26.3` (`d5cc7d4`) with Folia's region threading ported forward from `ver/26.2.x` (Folia has no 26.3 branch yet; CanvasMC's `dev/26.3` port was used as a reference)
-- Project stage: `v0.2.6-alpha`
+- Project stage: `v0.2.7-alpha`
 - Java toolchain: JDK 25
 - Build system: Gradle + Paperweight patch workflow
 
 ## Compatibility stance
 
-SilkMC is compatibility-focused by default.
+Silk is compatibility-focused by default.
 
 - Plugins marked with `silk-supported: true` are treated as compatibility-aware.
 - Legacy `folia-supported: true` metadata is still honored for upstream interoperability.
-- Unmarked plugins can be allowed with warnings through SilkMC compatibility policy instead of being hard-blocked immediately.
+- Unmarked plugins can be allowed with warnings through Silk compatibility policy instead of being hard-blocked immediately.
 - Unsafe assumptions still fail safely where the server cannot preserve correctness.
 
 See [docs/compatibility.md](docs/compatibility.md) and [docs/migration/plugin-developers.md](docs/migration/plugin-developers.md).
@@ -39,7 +50,7 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 ./gradlew :silkmc-server:createPaperclipJar
 ```
 
-Use the runnable Paperclip-style server jar for local testing and releases:
+Use the runnable Paperclip-style server jar for local testing. Local builds keep the internal `silkmc-*` module names; release assets are renamed to `silk-*`.
 
 ```powershell
 java -Xms4G -Xmx4G -jar .\silkmc-server\build\libs\silkmc-paperclip-26.3.local-SNAPSHOT.jar nogui
@@ -89,6 +100,7 @@ reconnects and restarts.
 - [Plugin Compatibility Reports](docs/testing/plugin-compatibility-reports.md)
 - [Benchmarking](docs/benchmarking.md)
 - [Upstream and Attribution](docs/development/upstream.md)
+- [Alpha Release Notes (v0.2.7)](docs/releases/v0.2.7-alpha.md)
 - [Alpha Release Notes (v0.2.6)](docs/releases/v0.2.6-alpha.md)
 - [Alpha Release Notes (v0.2.5)](docs/releases/v0.2.5-alpha.md)
 - [Alpha Release Notes (v0.2.4)](docs/releases/v0.2.4-alpha.md)
@@ -103,4 +115,4 @@ reconnects and restarts.
 
 ## Attribution
 
-SilkMC is derived from Folia and Paper. Upstream names are retained only where required for license compliance, attribution, or developer-facing upstream maintenance notes.
+Silk is derived from Folia and Paper. Upstream names are retained only where required for license compliance, attribution, or developer-facing upstream maintenance notes.

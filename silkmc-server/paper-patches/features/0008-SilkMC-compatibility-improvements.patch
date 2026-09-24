@@ -32,7 +32,7 @@ index 08745a35b1ce8cc56d970472088de3cd17b9e43a..32a2e7ff645b5cca596e7869438e1937
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 30815c8970b1f1c88a3c7bb5fd36efd915f1687d..703f75f13823b78df3178bcfd9059175da9837c5 100644
+index 30815c8970b1f1c88a3c7bb5fd36efd915f1687d..dbb4a30f7cff94e0aa5b55ff72216ab054df74e1 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -40,8 +40,8 @@ public class PaperVersionFetcher implements VersionFetcher {
@@ -41,8 +41,8 @@ index 30815c8970b1f1c88a3c7bb5fd36efd915f1687d..703f75f13823b78df3178bcfd9059175
      private static final int DISTANCE_UNKNOWN = -2;
 -    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads/folia"; // Folia
 -    private static final String REPOSITORY = "PaperMC/Folia"; // Folia
-+    private static final String DOWNLOAD_PAGE = "https://github.com/tame-gg/SilkMC/releases"; // SilkMC
-+    private static final String REPOSITORY = "tame-gg/SilkMC"; // SilkMC
++    private static final String DOWNLOAD_PAGE = "https://github.com/tame-gg/Silk/releases"; // SilkMC
++    private static final String REPOSITORY = "tame-gg/Silk"; // SilkMC
      private static final ServerBuildInfo BUILD_INFO = ServerBuildInfo.buildInfo();
      private static final String USER_AGENT = BUILD_INFO.brandName() + "/" + BUILD_INFO.asString(VERSION_SIMPLE) + " (https://papermc.io)";
      private static final Gson GSON = new Gson();

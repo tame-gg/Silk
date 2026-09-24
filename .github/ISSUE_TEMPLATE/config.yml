@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: SilkMC Discussions
-    url: https://github.com/tame-gg/SilkMC/discussions
+    url: https://github.com/tame-gg/Silk/discussions
     about: Ask setup or compatibility questions here.
   - name: Security Report
-    url: https://github.com/tame-gg/SilkMC/security/advisories/new
+    url: https://github.com/tame-gg/Silk/security/advisories/new
     about: Report security issues privately.
