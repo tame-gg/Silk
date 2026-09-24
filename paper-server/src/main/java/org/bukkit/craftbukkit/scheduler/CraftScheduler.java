@@ -316,6 +316,13 @@ public class CraftScheduler implements BukkitScheduler {
             this.asyncScheduler.cancelTasks(plugin);
         }
         // Paper end
+        // SilkMC start - bridged sync tasks live in runners, not in pending, so cancel them directly
+        for (final CraftTask runner : this.runners.values()) {
+            if (runner.isSync() && plugin.equals(runner.getOwner())) {
+                runner.cancel0();
+            }
+        }
+        // SilkMC end - bridged sync tasks live in runners, not in pending, so cancel them directly
         final CraftTask task = new CraftTask(
                 new Runnable() {
                     @Override

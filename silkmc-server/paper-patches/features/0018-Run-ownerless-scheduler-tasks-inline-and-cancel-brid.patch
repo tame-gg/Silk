@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Koels <227752089+koels@users.noreply.github.com>
+Date: Thu, 24 Sep 2026 14:44:18 -0500
+Subject: [PATCH] Run ownerless scheduler tasks inline and cancel bridged tasks
+ by plugin
+
+CraftScheduler#cancelTask(s) queues an internal CraftTask with no owner.
+SilkSchedulerBridge forwarded it to the Folia global region scheduler,
+which rejects a null plugin, so Vault (and any plugin cancelling its tasks
+in onDisable) threw an NPE on shutdown. cancelTasks(plugin) also only
+scanned the pending queue, which bridged sync tasks never enter, so it
+left them running.
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+index 5b2a6dd784006d7ec07f8f85a673596d300905f7..35e8c5b6bbce5de089c6a041ebd947959fac6814 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
++++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+@@ -316,6 +316,13 @@ public class CraftScheduler implements BukkitScheduler {
+             this.asyncScheduler.cancelTasks(plugin);
+         }
+         // Paper end
++        // SilkMC start - bridged sync tasks live in runners, not in pending, so cancel them directly
++        for (final CraftTask runner : this.runners.values()) {
++            if (runner.isSync() && plugin.equals(runner.getOwner())) {
++                runner.cancel0();
++            }
++        }
++        // SilkMC end - bridged sync tasks live in runners, not in pending, so cancel them directly
+         final CraftTask task = new CraftTask(
+                 new Runnable() {
+                     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/SilkSchedulerBridge.java b/src/main/java/org/bukkit/craftbukkit/scheduler/SilkSchedulerBridge.java
+index 178bd440d1cc16610165da9a1be81df168023d5d..29ae4b793c4454f42c60373a531f50bfabaec6e4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scheduler/SilkSchedulerBridge.java
++++ b/src/main/java/org/bukkit/craftbukkit/scheduler/SilkSchedulerBridge.java
+@@ -20,6 +20,12 @@ public final class SilkSchedulerBridge {
+ 
+         // CraftFuture is handled here too since it extends CraftTask and isSync() == true
+         Plugin plugin = task.getOwner();
++        if (plugin == null) {
++            // Internal ownerless task, e.g. the cancellation markers queued by cancelTask/cancelTasks. It only
++            // edits scheduler bookkeeping and Folia's schedulers require an owning plugin, so run it inline.
++            task.run();
++            return task;
++        }
+         long period = task.getPeriod();
+         boolean repeating = period > 0;
+ 
