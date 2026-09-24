@@ -547,7 +547,7 @@ def run_once(jar: Path, java: str, cfg: BenchConfig, run_dir: Path, rep: int) ->
         for _ in range(60):
             time.sleep(2)
             server.drain()
-            server.send("silkmc bench")
+            server.send("silk bench")
             snap = parse_bench_lines(server.collect("SILKBENCH"))
             summary = snap.get("summary") or {}
             loaded = int(summary.get("chunks", 0))
@@ -587,7 +587,7 @@ def run_once(jar: Path, java: str, cfg: BenchConfig, run_dir: Path, rep: int) ->
         deadline = time.time() + cfg.measure_seconds
         while time.time() < deadline:
             server.drain()
-            server.send("silkmc bench")
+            server.send("silk bench")
             lines = server.collect("SILKBENCH")
             parsed = parse_bench_lines(lines)
             if parsed.get("summary"):

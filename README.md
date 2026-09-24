@@ -71,10 +71,10 @@ The plain `silkmc-server` jar is a module artifact and is not intended to be lau
 
 | Command | Permission | Purpose |
 | --- | --- | --- |
-| `/silkmc status` | `silkmc.command` | Region count, worst-region MSPT, and compatibility classification totals |
-| `/silkmc plugins [page]` | `silkmc.command` | Paged list of cached plugin compatibility reports |
-| `/silkmc report <plugin>` | `silkmc.command` | Full stored report for one plugin, including override details |
-| `/silkmc reload` | `silkmc.command` | Reload `silkmc-compatibility.yml` and `silkmc-plugin-overrides.yml` |
+| `/silk status` | `silkmc.command` | Region count, worst-region MSPT, and compatibility classification totals |
+| `/silk plugins [page]` | `silkmc.command` | Paged list of cached plugin compatibility reports |
+| `/silk report <plugin>` | `silkmc.command` | Full stored report for one plugin, including override details |
+| `/silk reload` | `silkmc.command` | Reload `silkmc-compatibility.yml` and `silkmc-plugin-overrides.yml` |
 | `/tpsbar` | `silkmc.bars` | Toggle a live boss bar with TPS, MSPT, and ping for your own region |
 | `/rambar` | `silkmc.bars` | Toggle a live boss bar with heap usage |
 

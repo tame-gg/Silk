@@ -197,7 +197,7 @@ public final class SilkPluginCompatibility {
      * Resolves a SilkMC config file against the server directory rather than the process working
      * directory. They are usually the same, but when they are not, a bare relative name means the
      * server reads (and creates) a different file from the one the operator edited next to their
-     * {@code server.properties} - and {@code /silkmc reload} then reports success having reloaded
+     * {@code server.properties} - and {@code /silk reload} then reports success having reloaded
      * nothing they changed.
      */
     private static File configFile(final String name) {

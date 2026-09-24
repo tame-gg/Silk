@@ -33,7 +33,7 @@ reached without clients. Do not draw conclusions about them from this harness.
    online, and is the reason this harness can work at all without clients.
 4. Summons a deterministic entity population per region (seeded RNG, so the same config and seed
    always produce the same placement).
-5. Warms up, then samples `/silkmc bench` on an interval.
+5. Warms up, then samples `/silk bench` on an interval.
 6. Aggregates: median across samples within a repetition, then median across repetitions.
 
 ### Keeping regions apart
@@ -59,7 +59,7 @@ methodology uses a warmup period, multiple repetitions and medians.
 
 ### Automated (collected by the harness)
 
-Read from `/silkmc bench`, which reports the tick windows the server **already maintains**. No
+Read from `/silk bench`, which reports the tick windows the server **already maintains**. No
 instrumentation is added to the tick loop; the command only formats data that is collected on every
 region tick regardless.
 
@@ -136,7 +136,7 @@ Control.
 
 ```bash
 python tools/benchmark/silkbench.py \
-  --jar silkmc-server/build/libs/silkmc-paperclip-26.2.local-SNAPSHOT.jar \
+  --jar silkmc-server/build/libs/silkmc-paperclip-26.3.local-SNAPSHOT.jar \
   --out bench-results \
   --regions 4 --chunks-per-region 6 --entities-per-region 800 \
   --warmup 45 --measure 60 --reps 2 \
@@ -163,7 +163,7 @@ Redstone / block-update workload:
 **Recommended saturating baseline** (needs ~2.4 tick threads):
 
 ```bash
-python tools/benchmark/silkbench.py   --jar silkmc-server/build/libs/silkmc-paperclip-26.2.local-SNAPSHOT.jar   --out bench-results   --regions 8 --chunks-per-region 8 --entities-per-region 300   --workload mixed --block-layers 4   --warmup 45 --measure 60 --reps 2   --threads 1 2 4 6 8 --schedulers EDF WORK_STEALING --heap 8G
+python tools/benchmark/silkbench.py   --jar silkmc-server/build/libs/silkmc-paperclip-26.3.local-SNAPSHOT.jar   --out bench-results   --regions 8 --chunks-per-region 8 --entities-per-region 300   --workload mixed --block-layers 4   --warmup 45 --measure 60 --reps 2   --threads 1 2 4 6 8 --schedulers EDF WORK_STEALING --heap 8G
 ```
 
 With JFR for CPU/GC/allocation:

@@ -1,0 +1,84 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Koels <227752089+koels@users.noreply.github.com>
+Date: Thu, 24 Sep 2026 15:40:43 -0500
+Subject: [PATCH] Rename the /silkmc command to /silk
+
+Keep /silkmc as an alias so existing scripts and habits keep working, and
+show Silk in the /silk status line. The silkmc.command permission is
+unchanged.
+
+diff --git a/src/main/java/gg/tame/silkmc/server/command/SilkMCCommand.java b/src/main/java/gg/tame/silkmc/server/command/SilkMCCommand.java
+index e487978288f4ba6705412afa2b802fda30720251..5ff9a4e4f52ae6a38d1e2a4315923f5e00c6aca3 100644
+--- a/src/main/java/gg/tame/silkmc/server/command/SilkMCCommand.java
++++ b/src/main/java/gg/tame/silkmc/server/command/SilkMCCommand.java
+@@ -25,9 +25,10 @@ public final class SilkMCCommand extends Command {
+     private static final int PAGE_SIZE = 8;
+ 
+     public SilkMCCommand() {
+-        super("silkmc");
+-        this.description = "SilkMC operator and compatibility commands";
+-        this.usageMessage = "/silkmc <status|plugins|report|reload|bench>";
++        super("silk");
++        this.description = "Silk operator and compatibility commands";
++        this.usageMessage = "/silk <status|plugins|report|reload|bench>";
++        this.setAliases(List.of("silkmc")); // old name, kept so existing scripts keep working
+         this.setPermission("silkmc.command");
+         final var pluginManager = Bukkit.getPluginManager();
+         if (pluginManager.getPermission("silkmc.command") == null) {
+@@ -135,7 +136,7 @@ public final class SilkMCCommand extends Command {
+ 
+     private boolean executeReport(final CommandSender sender, final String[] args) {
+         if (args.length < 2) {
+-            sender.sendMessage(Component.text("Usage: /silkmc report <plugin>", NamedTextColor.RED));
++            sender.sendMessage(Component.text("Usage: /silk report <plugin>", NamedTextColor.RED));
+             return false;
+         }
+         final String pluginName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+diff --git a/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibility.java b/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibility.java
+index 373edf0f1f0c05d5ac3a6cc7b2a43b4d53b1842b..b4cce0e5bc98681d9563fdd0ab56743f79827736 100644
+--- a/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibility.java
++++ b/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibility.java
+@@ -197,7 +197,7 @@ public final class SilkPluginCompatibility {
+      * Resolves a SilkMC config file against the server directory rather than the process working
+      * directory. They are usually the same, but when they are not, a bare relative name means the
+      * server reads (and creates) a different file from the one the operator edited next to their
+-     * {@code server.properties} - and {@code /silkmc reload} then reports success having reloaded
++     * {@code server.properties} - and {@code /silk reload} then reports success having reloaded
+      * nothing they changed.
+      */
+     private static File configFile(final String name) {
+diff --git a/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibilityManager.java b/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibilityManager.java
+index 246af778cd792ece33451f8cfa7de61d43369367..5218cf65fe179528425d11e21c4a52ef8851deac 100644
+--- a/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibilityManager.java
++++ b/src/main/java/gg/tame/silkmc/server/compat/SilkPluginCompatibilityManager.java
+@@ -31,7 +31,7 @@ import org.objectweb.asm.Type;
+ public final class SilkPluginCompatibilityManager {
+ 
+     private static final Logger LOGGER = Logger.getLogger("SilkMC");
+-    // DecimalFormat is not thread-safe and /silkmc can be dispatched from any region thread, so each
++    // DecimalFormat is not thread-safe and /silk can be dispatched from any region thread, so each
+     // thread formats through its own instance rather than sharing one.
+     private static final ThreadLocal<DecimalFormat> MSPT_FORMAT = ThreadLocal.withInitial(() -> new DecimalFormat("#,##0.00"));
+     private static final Map<String, Inspection> INSPECTIONS = new ConcurrentHashMap<>();
+@@ -118,7 +118,7 @@ public final class SilkPluginCompatibilityManager {
+         final Summary summary = summarize();
+ 
+         return Component.text()
+-            .append(label("SilkMC "))
++            .append(label("Silk "))
+             .append(value(MinecraftServer.getServer().getServerVersion()))
+             .append(separator(" | "))
+             .append(label("regions="))
+diff --git a/src/main/java/io/papermc/paper/command/PaperCommands.java b/src/main/java/io/papermc/paper/command/PaperCommands.java
+index c35bf2f524e552c31b5e1a4007a69a979524c492..9848c8a6d7bfe9f4c9ba90b3bbaa38f4d5acb74c 100644
+--- a/src/main/java/io/papermc/paper/command/PaperCommands.java
++++ b/src/main/java/io/papermc/paper/command/PaperCommands.java
+@@ -29,7 +29,7 @@ public final class PaperCommands {
+         COMMANDS.put("paper", new PaperCommand("paper"));
+         COMMANDS.put("tps", new io.papermc.paper.threadedregions.commands.CommandServerHealth()); // Folia - region threading
+         COMMANDS.put("profiler", new io.papermc.paper.threadedregions.commands.CommandProfiler()); // Folia - region threading - profiler
+-        COMMANDS.put("silkmc", new SilkMCCommand());
++        COMMANDS.put("silk", new SilkMCCommand());
+         COMMANDS.put("tpsbar", new TpsBarCommand());
+         COMMANDS.put("rambar", new RamBarCommand());
+         ServerStatusBars.init(); // SilkMC - start status-bar refresher and restore persisted bars
