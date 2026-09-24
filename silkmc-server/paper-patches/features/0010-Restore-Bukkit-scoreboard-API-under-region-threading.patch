@@ -5,10 +5,10 @@ Subject: [PATCH] Restore Bukkit scoreboard API under region threading
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index e43652952cbbfc56905de862464396d78e67da2c..72b957cc98175f1e9fd0ad087af5db38ca481f63 100644
+index d0a08bea2ee242f915974a224c392dc7369d3996..62508aff30d87e8172dc08c159e6a536087cf81c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -246,7 +246,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
+@@ -251,7 +251,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
      private CraftWorldBorder clientWorldBorder = null;
      private BorderChangeListener clientWorldBorderListener = this.createWorldBorderListener();
      private long lastSaveTime; // Paper - getLastPlayed replacement API

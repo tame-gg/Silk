@@ -1,6 +1,6 @@
-# name|jar filename|official download url
-LuckPerms|LuckPerms-Bukkit-5.5.45.jar|https://download.luckperms.net/1633/bukkit/loader/LuckPerms-Bukkit-5.5.45.jar
-EssentialsX|EssentialsX-2.21.2.jar|https://repo.essentialsx.net/releases/net/essentialsx/EssentialsX/2.21.2/EssentialsX-2.21.2.jar
+# plugin name (as it appears in the server log)|jar filename|official download url
+LuckPerms|LuckPerms-Bukkit-5.5.85.jar|https://download.luckperms.net/1672/bukkit/loader/LuckPerms-Bukkit-5.5.85.jar
+Essentials|EssentialsX-2.22.1-dev+24-49a2f10.jar|https://ci.ender.zone/job/EssentialsX/1829/artifact/jars/EssentialsX-2.22.1-dev%2B24-49a2f10.jar
 Vault|Vault.jar|https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar
-WorldEdit|worldedit-bukkit-7.4.3.jar|https://cdn.modrinth.com/data/1u6JkXh5/versions/yDUBafTJ/worldedit-bukkit-7.4.3.jar
+WorldEdit|worldedit-bukkit-7.4.6-beta-02.jar|https://cdn.modrinth.com/data/1u6JkXh5/versions/J1eeOh6C/worldedit-bukkit-7.4.6-beta-02.jar
 ProtocolLib|ProtocolLib.jar|https://github.com/dmulloy2/ProtocolLib/releases/download/5.4.0/ProtocolLib.jar

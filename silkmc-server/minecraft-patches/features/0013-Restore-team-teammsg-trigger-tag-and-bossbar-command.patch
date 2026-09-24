@@ -93,10 +93,10 @@ index ea60c06382bf3182e096a0e6c6195e2b8aeda9f6..9439c400c97a216ff6aa06cdacc99fd7
      }
  }
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index 51d01ff1c38c668cadfff2f4b6f028f2bc53d11c..f34f676e2aa049ebd9668e370484e1305fe11ef7 100644
+index d8b230d1ff25cd7f1d244c1e00205c20b32e0cd8..fe642ed5d704609de40e0df77a894a76440bee2d 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -198,7 +198,7 @@ public class Commands {
+@@ -200,7 +200,7 @@ public class Commands {
          AdvancementCommands.register(this.dispatcher);
          AttributeCommand.register(this.dispatcher, context);
          ExecuteCommand.register(this.dispatcher, context);
@@ -104,8 +104,8 @@ index 51d01ff1c38c668cadfff2f4b6f028f2bc53d11c..f34f676e2aa049ebd9668e370484e130
 +        BossBarCommands.register(this.dispatcher, context); // SilkMC - region threading - boss bar state is concurrent and player targets are resolved on the global region
          ClearInventoryCommands.register(this.dispatcher, context);
          //CloneCommands.register(this.dispatcher, context); // Folia - region threading - TODO
-         DamageCommand.register(this.dispatcher, context);
-@@ -251,16 +251,16 @@ public class Commands {
+         //ComputeCommand.register(this.dispatcher, context); // Folia - region threading - TODO
+@@ -255,16 +255,16 @@ public class Commands {
          StopSoundCommand.register(this.dispatcher);
          StopwatchCommand.register(this.dispatcher);
          SummonCommand.register(this.dispatcher, context);
@@ -142,10 +142,10 @@ index fb55ed68a1f8470b551030a27ca2656555c93d9e..dcf6e0a603f3975978ad5a7b48686506
      public @Nullable CustomBossEvent get(final Identifier id) {
          return this.events.get(id);
 diff --git a/net/minecraft/server/commands/TagCommand.java b/net/minecraft/server/commands/TagCommand.java
-index 97dbff6de2ba316724d19c5822ae83518eb72b9b..e1b0aa4cd4d51e580901cbda1c92f4b5df702c3e 100644
+index 25825d09a219afd38ffd49d87aa4da6675b8bf4e..de1112edd56bbb70ca6f4dfa4c598b9f77b2177a 100644
 --- a/net/minecraft/server/commands/TagCommand.java
 +++ b/net/minecraft/server/commands/TagCommand.java
-@@ -29,24 +29,36 @@ public class TagCommand {
+@@ -49,24 +49,36 @@ public class TagCommand {
                              Commands.literal("add")
                                  .then(
                                      Commands.argument("name", StringArgumentType.word())
@@ -184,13 +184,13 @@ index 97dbff6de2ba316724d19c5822ae83518eb72b9b..e1b0aa4cd4d51e580901cbda1c92f4b5
 +    // SilkMC end - region threading
 +
      private static Collection<String> getTags(final Collection<? extends Entity> entities) {
-         Set<String> result = Sets.newHashSet();
+         Set<String> result = new HashSet<>();
  
 diff --git a/net/minecraft/server/commands/TeamCommand.java b/net/minecraft/server/commands/TeamCommand.java
-index b9c04e559db8352def5f6d73a5f7532e7cce9e0e..bcf683b4aadf52a09c64666ceadccde94cd399bb 100644
+index 69fee3d5ac8e02a66892122c6f9b18435dcdec05..003aeb18c7118eda7f171139459b5dbc1f916aff 100644
 --- a/net/minecraft/server/commands/TeamCommand.java
 +++ b/net/minecraft/server/commands/TeamCommand.java
-@@ -437,11 +437,20 @@ public class TeamCommand {
+@@ -429,11 +429,20 @@ public class TeamCommand {
  
      private static int createTeam(final CommandSourceStack source, final String name, final Component displayName) throws CommandSyntaxException {
          Scoreboard scoreboard = source.getServer().getScoreboard();

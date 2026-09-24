@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Koels <kylematthewglenn@proton.me>
+From: Koels <227752089+koels@users.noreply.github.com>
 Date: Fri, 5 Sep 2025 20:15:00 +0000
 Subject: [PATCH] Raise the default tick thread count
 
 
 diff --git a/io/papermc/paper/threadedregions/TickRegions.java b/io/papermc/paper/threadedregions/TickRegions.java
-index a6ab9cb..abe1e92 100644
+index a6ab9cb01f4f49f5f44b6ed324fa6d51139aabb6..abe1e922df1c4e5afae4a855ba2cbb8ce8ebde08 100644
 --- a/io/papermc/paper/threadedregions/TickRegions.java
 +++ b/io/papermc/paper/threadedregions/TickRegions.java
 @@ -44,12 +44,29 @@ public final class TickRegions implements ThreadedRegionizer.RegionCallbacks<Tic

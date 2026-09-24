@@ -5,7 +5,7 @@ Subject: [PATCH] Restore Bukkit scoreboard API under region threading
 
 
 diff --git a/net/minecraft/server/ServerScoreboard.java b/net/minecraft/server/ServerScoreboard.java
-index 7ffd683c42557052d7bfa963d87e68f4e8f62d6c..0c68574ce5f03aed868443a8402894ebdf698937 100644
+index 3c1d3c873e857a16ed33dcd77ab937017256776c..9a1c4f6c9534f100e5c61919359183f751be467a 100644
 --- a/net/minecraft/server/ServerScoreboard.java
 +++ b/net/minecraft/server/ServerScoreboard.java
 @@ -26,8 +26,10 @@ import org.jspecify.annotations.Nullable;
@@ -21,7 +21,7 @@ index 7ffd683c42557052d7bfa963d87e68f4e8f62d6c..0c68574ce5f03aed868443a8402894eb
  
      public ServerScoreboard(final MinecraftServer server) {
          this.server = server;
-@@ -293,24 +295,33 @@ public class ServerScoreboard extends Scoreboard {
+@@ -296,24 +298,33 @@ public class ServerScoreboard extends Scoreboard {
          return count;
      }
  
@@ -64,10 +64,10 @@ index 7ffd683c42557052d7bfa963d87e68f4e8f62d6c..0c68574ce5f03aed868443a8402894eb
              if (serverPlayer.getBukkitEntity().getScoreboard().getHandle() == this) {
                  serverPlayer.connection.send(packet);
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index e3ed08dea3a34dad755bffea0807be149742eef5..043421f53a95c300a142c77b85935478005bd508 100644
+index b67fe786601a4352e650954048f5bdf72632f047..c41caebe868f5c5ebb2989b3b3a06efe1b40b87e 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -2981,7 +2981,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -3238,7 +3238,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
                  ServerLevel.this.getWaypointManager().untrackWaypoint(waypoint);
              }
  
@@ -77,10 +77,10 @@ index e3ed08dea3a34dad755bffea0807be149742eef5..043421f53a95c300a142c77b85935478
  
          @Override
 diff --git a/net/minecraft/server/players/PlayerList.java b/net/minecraft/server/players/PlayerList.java
-index e7579a9873362317dd82b63306cf650af9472574..f36c3c344192a0482803e1f24f5b6256c2c3b750 100644
+index e60043f563c571dffb53220d247d84b3bd1342ce..7ab6b74f45509b488fb61bb87269343f3369fd92 100644
 --- a/net/minecraft/server/players/PlayerList.java
 +++ b/net/minecraft/server/players/PlayerList.java
-@@ -272,7 +272,12 @@ public abstract class PlayerList {
+@@ -274,7 +274,12 @@ public abstract class PlayerList {
          this.sendPlayerPermissionLevel(player);
          player.getStats().markAllDirty();
          player.getRecipeBook().sendInitialRecipeBook(player);
@@ -94,7 +94,7 @@ index e7579a9873362317dd82b63306cf650af9472574..f36c3c344192a0482803e1f24f5b6256
          this.server.invalidateStatus();
          MutableComponent component;
          if (player.getGameProfile().name().equalsIgnoreCase(oldName)) {
-@@ -377,7 +382,7 @@ public abstract class PlayerList {
+@@ -380,7 +385,7 @@ public abstract class PlayerList {
          // Paper start - Configurable player collision; Add to collideRule team if needed
          final net.minecraft.world.scores.Scoreboard scoreboard = this.getServer().getLevel(Level.OVERWORLD).getScoreboard();
          final PlayerTeam collideRuleTeam = scoreboard.getPlayerTeam(this.collideRuleTeamName);
@@ -103,7 +103,7 @@ index e7579a9873362317dd82b63306cf650af9472574..f36c3c344192a0482803e1f24f5b6256
              scoreboard.addPlayerToTeam(player.getScoreboardName(), collideRuleTeam);
          }
          // Paper end - Configurable player collision
-@@ -516,7 +521,7 @@ public abstract class PlayerList {
+@@ -519,7 +524,7 @@ public abstract class PlayerList {
          // CraftBukkit end
  
          // Paper start - Configurable player collision; Remove from collideRule team if needed
@@ -112,7 +112,7 @@ index e7579a9873362317dd82b63306cf650af9472574..f36c3c344192a0482803e1f24f5b6256
              final net.minecraft.world.scores.Scoreboard scoreBoard = this.server.getLevel(Level.OVERWORLD).getScoreboard();
              final PlayerTeam team = scoreBoard.getPlayersTeam(this.collideRuleTeamName);
              if (player.getTeam() == team && team != null) {
-@@ -1187,7 +1192,7 @@ public abstract class PlayerList {
+@@ -1190,7 +1195,7 @@ public abstract class PlayerList {
          // CraftBukkit end
  
          // Paper start - Configurable player collision; Remove collideRule team if it exists

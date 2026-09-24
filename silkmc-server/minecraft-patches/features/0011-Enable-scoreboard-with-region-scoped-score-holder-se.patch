@@ -101,10 +101,10 @@ index 0000000000000000000000000000000000000000..ea60c06382bf3182e096a0e6c6195e2b
 +    }
 +}
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index b1a8e4d6cf21245321dc8855b4c2096b14bbb0a2..51d01ff1c38c668cadfff2f4b6f028f2bc53d11c 100644
+index caaa2b3ead93445ae48e3138f5dd50a041108ed7..d8b230d1ff25cd7f1d244c1e00205c20b32e0cd8 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -240,7 +240,7 @@ public class Commands {
+@@ -244,7 +244,7 @@ public class Commands {
          RotateCommand.register(this.dispatcher);
          SayCommand.register(this.dispatcher);
          //ScheduleCommand.register(this.dispatcher); // Folia - region threading

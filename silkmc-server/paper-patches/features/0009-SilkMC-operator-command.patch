@@ -5,7 +5,7 @@ Subject: [PATCH] SilkMC operator command
 
 
 diff --git a/src/main/java/io/papermc/paper/command/PaperCommands.java b/src/main/java/io/papermc/paper/command/PaperCommands.java
-index 3deca0b4e95609dc95376a86b5cbd525729a1031..1d7de704a25cbcfa9ab426e49bd44da594bb8cd5 100644
+index b9b24575d7c12e7859fdf49a2c71d2b2d9f0b439..c35bf2f524e552c31b5e1a4007a69a979524c492 100644
 --- a/src/main/java/io/papermc/paper/command/PaperCommands.java
 +++ b/src/main/java/io/papermc/paper/command/PaperCommands.java
 @@ -1,6 +1,10 @@
@@ -19,8 +19,8 @@ index 3deca0b4e95609dc95376a86b5cbd525729a1031..1d7de704a25cbcfa9ab426e49bd44da5
  import io.papermc.paper.command.brigadier.CommandRegistrationFlag;
  import io.papermc.paper.command.brigadier.CommandSourceStack;
  import net.minecraft.server.MinecraftServer;
-@@ -26,6 +30,10 @@ public final class PaperCommands {
-         COMMANDS.put("mspt", new MSPTCommand("mspt"));
+@@ -25,6 +29,10 @@ public final class PaperCommands {
+         COMMANDS.put("paper", new PaperCommand("paper"));
          COMMANDS.put("tps", new io.papermc.paper.threadedregions.commands.CommandServerHealth()); // Folia - region threading
          COMMANDS.put("profiler", new io.papermc.paper.threadedregions.commands.CommandProfiler()); // Folia - region threading - profiler
 +        COMMANDS.put("silkmc", new SilkMCCommand());

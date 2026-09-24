@@ -261,10 +261,10 @@ index 0000000000000000000000000000000000000000..7a2406d242d0a9292207f21298b2f6aa
 +}
 \ No newline at end of file
 diff --git a/net/minecraft/commands/Commands.java b/net/minecraft/commands/Commands.java
-index a568264ed0603b211e6f757cf7d8d1243f8845a9..b1a8e4d6cf21245321dc8855b4c2096b14bbb0a2 100644
+index f7c6ee5189c4f7658a34c15d96c03ae57a9cdab1..caaa2b3ead93445ae48e3138f5dd50a041108ed7 100644
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -261,7 +261,7 @@ public class Commands {
+@@ -265,7 +265,7 @@ public class Commands {
          TimeCommand.register(this.dispatcher, context);
          TitleCommand.register(this.dispatcher, context);
          //TriggerCommand.register(this.dispatcher); // Folia - region threading - TODO later
@@ -274,49 +274,48 @@ index a568264ed0603b211e6f757cf7d8d1243f8845a9..b1a8e4d6cf21245321dc8855b4c2096b
          WorldBorderCommand.register(this.dispatcher);
          if (JvmProfiler.INSTANCE.isAvailable()) {
 diff --git a/net/minecraft/server/level/ServerLevel.java b/net/minecraft/server/level/ServerLevel.java
-index 3db75ac3f7f111b94178cc29684f24dd55ac5847..e3ed08dea3a34dad755bffea0807be149742eef5 100644
+index c344460e94db6680126bdc22b83d5edb5e6f4a7f..b67fe786601a4352e650954048f5bdf72632f047 100644
 --- a/net/minecraft/server/level/ServerLevel.java
 +++ b/net/minecraft/server/level/ServerLevel.java
-@@ -683,7 +683,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
+@@ -685,7 +685,7 @@ public class ServerLevel extends Level implements WorldGenLevel, ServerEntityGet
  
          this.sleepStatus = new SleepStatus();
          this.gameEventDispatcher = new GameEventDispatcher(this);
 -        this.waypointManager = new ServerWaypointManager(this); // Paper - optimize ServerWaypointManager with locator bar disabled
 +        this.waypointManager = new gg.tame.silkmc.server.waypoints.RegionThreadingWaypointManager(this); // Paper - optimize ServerWaypointManager with locator bar disabled // SilkMC - region threading
          this.environmentAttributes = EnvironmentAttributeSystem.builder().addDefaultLayers(this).build();
+         this.uncachedBiomeResolver = this.getChunkSource().getGenerator().getBiomeSource().createUncachedResolver(this.getChunkSource().randomState());
          //this.updateSkyBrightness(); // Folia - region threading - delay until first tick
-         // Paper start - rewrite chunk system
 diff --git a/net/minecraft/server/level/ServerPlayer.java b/net/minecraft/server/level/ServerPlayer.java
-index fbe0ef19bfabfc42d9e0e08e17b08159321b3804..4d421a3b571fd137ab6c55893f3d15b399fdcbe2 100644
+index 8ed1e207bb39afa40636b695e67aad91587ca7d5..77e27ec71abb98e7d050915c70448826cb000b2b 100644
 --- a/net/minecraft/server/level/ServerPlayer.java
 +++ b/net/minecraft/server/level/ServerPlayer.java
-@@ -275,6 +275,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -279,6 +279,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
      private @Nullable BlockPos raidOmenPosition;
      private Vec3 lastKnownClientMovement = Vec3.ZERO;
      private Input lastClientInput = Input.EMPTY;
 +    public final it.unimi.dsi.fastutil.objects.Object2ObjectMap<net.minecraft.world.waypoints.WaypointTransmitter, net.minecraft.world.waypoints.WaypointTransmitter.Connection> silk$activeWaypoints = new it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap<>();
      private final Set<ThrownEnderpearl> enderPearls = new HashSet<>();
+     private boolean postEffectsDirty = true;
      private long timeEntitySatOnShoulder;
-     private CompoundTag shoulderEntityLeft = new CompoundTag();
-@@ -1617,7 +1618,16 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1668,7 +1669,15 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
              Runnable consumeAnchorCharge = null; // Paper - Fix SPIGOT-5989 (don't use charge until after respawn event)
              Optional<Vec3> standUpPosition = RespawnAnchorBlock.findStandUpPosition(EntityTypes.PLAYER, level, pos);
              if (!forced && consumeSpawnBlock && standUpPosition.isPresent()) {
--                consumeAnchorCharge = () -> level.setBlock(pos, blockState.setValue(RespawnAnchorBlock.CHARGE, blockState.getValue(RespawnAnchorBlock.CHARGE) - 1), Block.UPDATE_ALL); // Paper - Fix SPIGOT-5989 (don't use charge until after respawn event)
+-                consumeAnchorCharge = () -> level.setBlockAndUpdate(pos, blockState.setValue(RespawnAnchorBlock.CHARGE, blockState.getValue(RespawnAnchorBlock.CHARGE) - 1)); // Paper - Fix SPIGOT-5989 (don't use charge until after respawn event)
 +                consumeAnchorCharge = () -> level.moonrise$loadChunksAsync(
 +                    pos,
 +                    1,
 +                    ca.spottedleaf.concurrentutil.util.Priority.NORMAL,
-+                    chunks -> level.setBlock(
++                    chunks -> level.setBlockAndUpdate(
 +                        pos,
-+                        blockState.setValue(RespawnAnchorBlock.CHARGE, blockState.getValue(RespawnAnchorBlock.CHARGE) - 1),
-+                        Block.UPDATE_ALL
++                        blockState.setValue(RespawnAnchorBlock.CHARGE, blockState.getValue(RespawnAnchorBlock.CHARGE) - 1)
 +                    )
-+                ); // Paper - Fix SPIGOT-5989 (don't use charge until after respawn event)
++                ); // Paper - Fix SPIGOT-5989 (don't use charge until after respawn event) // SilkMC - region threading
              }
              final Runnable finalConsumeAnchorCharge = consumeAnchorCharge; // Paper - Fix SPIGOT-5989
  
-@@ -1711,6 +1721,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1760,6 +1769,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
          ca.spottedleaf.concurrentutil.completable.CallbackCompletable<org.bukkit.Location> spawnPosComplete =
              new ca.spottedleaf.concurrentutil.completable.CallbackCompletable<>();
          boolean[] usedRespawnAnchor = new boolean[1];
@@ -324,7 +323,7 @@ index fbe0ef19bfabfc42d9e0e08e17b08159321b3804..4d421a3b571fd137ab6c55893f3d15b3
  
          // set up post spawn location logic
          spawnPosComplete.addWaiter((spawnLoc, throwable) -> {
-@@ -1739,6 +1750,9 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1788,6 +1798,9 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
                                  1.0F, 1.0F, ServerPlayer.this.level().getRandom().nextLong()
                              )
                          );
@@ -334,7 +333,7 @@ index fbe0ef19bfabfc42d9e0e08e17b08159321b3804..4d421a3b571fd137ab6c55893f3d15b3
                      }
                      ServerPlayer.this.connection.restartClientLoadTimerAfterRespawn();
                      // now the respawn logic is complete
-@@ -1781,6 +1795,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
+@@ -1830,6 +1843,7 @@ public class ServerPlayer extends Player implements ca.spottedleaf.moonrise.patc
                      boolean isRespawnAnchor = respawnWorld.getBlockState(respawnConfig.respawnData.pos()).is(net.minecraft.world.level.block.Blocks.RESPAWN_ANCHOR);
                      boolean isBed = respawnWorld.getBlockState(respawnConfig.respawnData.pos()).is(net.minecraft.tags.BlockTags.BEDS);
                      usedRespawnAnchor[0] = !alive && isRespawnAnchor;
@@ -343,10 +342,10 @@ index fbe0ef19bfabfc42d9e0e08e17b08159321b3804..4d421a3b571fd137ab6c55893f3d15b3
                      // finished now, pass the location on
                      spawnPosComplete.complete(
 diff --git a/net/minecraft/world/entity/Entity.java b/net/minecraft/world/entity/Entity.java
-index 2a8a7aeddffdfed31cd6e1162c0756986049fbab..65ec4fd16233792d9eb21fa6143c1082e296087c 100644
+index 92ce66dbcd6e9fc7cf6c3e2eea198c03005d70a8..2fb580551d0e259cc84140b3d8eb38a91ddad7a4 100644
 --- a/net/minecraft/world/entity/Entity.java
 +++ b/net/minecraft/world/entity/Entity.java
-@@ -4511,7 +4511,9 @@ public abstract class Entity
+@@ -4628,7 +4628,9 @@ public abstract class Entity
              }
  
              for (EntityTreeNode entity : passengerTree.getFullTree()) {
@@ -357,7 +356,7 @@ index 2a8a7aeddffdfed31cd6e1162c0756986049fbab..65ec4fd16233792d9eb21fa6143c1082
  
              if (hasPassengers) {
 diff --git a/net/minecraft/world/waypoints/WaypointTransmitter.java b/net/minecraft/world/waypoints/WaypointTransmitter.java
-index 2866b750a28cc32c2913d3c1afee95f05956982c..3caf0642f2edea99c420b28fbdfe038096640a0a 100644
+index 07af92310ee5c8bba04e6175b6faac629632e4de..8d1ab19234c649338d04c0dc153efdfbd9077724 100644
 --- a/net/minecraft/world/waypoints/WaypointTransmitter.java
 +++ b/net/minecraft/world/waypoints/WaypointTransmitter.java
 @@ -34,6 +34,9 @@ public interface WaypointTransmitter extends Waypoint {
