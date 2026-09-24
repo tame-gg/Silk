@@ -35,11 +35,23 @@ jobs:
       - name: Build release artifacts
         run: ./gradlew build :silkmc-server:createPaperclipJar --stacktrace
 
+      - name: Stage release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          for kind in paperclip bundler server; do
+            jars=(silkmc-server/build/libs/silkmc-${kind}-*.jar)
+            [ "${#jars[@]}" -eq 1 ] || { echo "expected one ${kind} jar, found: ${jars[*]}"; exit 1; }
+            cp "${jars[0]}" "release/silk-${kind}-${GITHUB_REF_NAME}.jar"
+          done
+          zip -qr "release/silk-patches-${GITHUB_REF_NAME}.zip" \
+            silkmc-api/paper-patches silkmc-api/build.gradle.kts.patch \
+            silkmc-server/minecraft-patches silkmc-server/paper-patches silkmc-server/build.gradle.kts.patch
+          ls -l release
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v3
         with:
-          files: |
-            silkmc-server/build/libs/silkmc-paperclip-*.jar
-            silkmc-server/build/libs/silkmc-bundler-*.jar
-            silkmc-server/build/libs/silkmc-server-*.jar
+          files: release/*
           body_path: docs/releases/${{ github.ref_name }}.md
